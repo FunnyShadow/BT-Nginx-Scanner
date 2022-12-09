@@ -6,7 +6,7 @@
 你可以直接运行下面的命令运行此脚本
 
 ```bash
-curl -sS https://raw.githubusercontent.com/FunnyShadow/BT-Nginx-Scanner/main/start.sh | bash
+bash <(curl -fsSL https://raw.githubusercontent.com/FunnyShadow/BT-Nginx-Scanner/main/start.sh)
 ```
 
 或使用 [GitHub Releases](https://github.com/FunnyShadow/BT-Nginx-Scanner/releases) 中利用 shc 工具打包制作的二进制版本
