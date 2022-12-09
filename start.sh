@@ -72,7 +72,7 @@ Copyright() {
     LEcho cyan "[-] BT 2022.12.3 Nginx 任意执行代码漏洞扫描工具" "[-] BT 2022.12.3 Nginx Arbitrary Code Execution Vulnerability Scanner"
     LEcho cyan "[-] Made By BlueFunny_" "[-] Made By BlueFunny_"
     LEcho cyan "[-] Version: 1.0" "[-] Version: 1.0"
-    LEcho cyan "[-] Github:"
+    LEcho cyan "[-] Github: https://github.com/FunnyShadow/BT-Nginx-Scanner" "[-] Github: https://github.com/FunnyShadow/BT-Nginx-Scanner"
 }
 CheckBT() {
     LEcho echo "[-] 正在检测宝塔面板文件..." "[-] Checking BT panel files..."
@@ -105,7 +105,6 @@ CheckVirusFiles() {
         if [ "${check}" == "${#virusFiles[@]}" ]; then
             break
         fi
-        sleep 1
     done
     return
 }
