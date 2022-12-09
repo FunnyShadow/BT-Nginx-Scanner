@@ -13,9 +13,15 @@ bash <(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/FunnySha
 
 或使用 [GitHub Releases](https://github.com/FunnyShadow/BT-Nginx-Scanner/releases) 中利用 shc 工具打包制作的二进制版本
 
-
+## 脚本功能
+[x] 利用 MD5 匹配扫描是否感染
+[x] 利用文件大小扫描是否感染
+[x] 自动清除感染文件
+[x] 自动修复面板
+[x] 自动修复 Nginx
 
 ## 漏洞相关分析
+
 #### 问题概述
 宝塔系 Nginx/Apache 均出现严重漏洞
 
@@ -33,17 +39,17 @@ bash <(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/FunnySha
 
 2. 存在以下任一文件（可能全部存在）
 
-- /var/tmp/count
+  - /var/tmp/count
 
-- /var/tmp/count.txt
+  - /var/tmp/count.txt
 
-- /var/tmp/backkk
+  - /var/tmp/backkk
 
-- /var/tmp/msglog.txt
+  - /var/tmp/msglog.txt
 
-- /var/tmp/systemd-private-56d86f7d8382402517f3b51625789161d2cb-chronyd.service-jP37av
+  - /var/tmp/systemd-private-56d86f7d8382402517f3b51625789161d2cb-chronyd.service-jP37av
 
-- /tmp/systemd-private-56d86f7d8382402517f3b5-jP37av
+  - /tmp/systemd-private-56d86f7d8382402517f3b5-jP37av
 
 3. 使用无痕模式访问目标网站的js文件，内容中包含: _0xd4d9 或 _0x2551 关键词的
 
