@@ -112,7 +112,7 @@ CheckVirusFiles() {
 Infection() {
     LEcho yellow "[!] 检测到系统已经被感染, 是否尝试清楚感染文件? (y/n)" "[!] The system has been infected, do you want to try to clean the infected files? (y/n)"
     LEcho yellow "[!] 请注意, 清理操作并非一定有效, 仅为缓解作用, 并且会关闭宝塔面板以及 Nginx 服务!" "[!] Please note that the cleaning operation is not necessarily effective, only for the purpose of alleviation, and will shut down the BT panel and Nginx service!"
-    read -r clean
+    read -rp 请输入选项: clean
     if [ "${clean}" == "y" ]; then
         Clean
     else
