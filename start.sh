@@ -6,9 +6,8 @@
 ## Files
 bt="$1"
 nginx="${bt:=/www}/server/nginx/sbin/nginx"
-nginxMD5="$(cat ${bt}/server/panel/data/nginx_md5.pl)"
-nginxFileMD5="$(md5sum ${nginx} | awk '{print $1}')"
-oldNginx="${bt:=/www}/server/nginx/sbin/nginxBak"
+oldNginx="${bt}/server/nginx/sbin/nginxBak"
+nginxMD5File="${bt}/server/panel/data/nginx_md5.pl"
 virusFiles=(
     /var/tmp/count
     /var/tmp/count.txt
@@ -91,10 +90,13 @@ CheckBT() {
 CheckNginx() {
     LEcho echo "[-] 正在检测 Nginx 是否被感染..." "[-] Checking if Nginx is infected..."
     if [ ! -f "${nginx}" ]; then
-        LEcho green "[√] 未找到Nginx, 您无需使用此脚本!" "[√] Nginx not found, you don't need to use this script!"
+        LEcho yellow "[!] 未找到Nginx, 跳过扫描!" "[!] Nginx not found, skipping scan!"
+        return
     fi
-    if [ "${nginxMD5}" != "" ] && [ "${nginxFileMD5}" != "" ]; then
-        [ "${nginxMD5}" != "${nginxFileMD5}" ] && nginxInfection=1
+    if [ -f ${nginxMD5File} ]; then
+        if ! md5sum -c ${nginx} ${nginxMD5File}; then
+            nginxInfection=1
+        fi
     else
         [ "$(ls -l ${nginx} | awk '{print $5}')" == "4730568" ] && nginxInfection=1
     fi
