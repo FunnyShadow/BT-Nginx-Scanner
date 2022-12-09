@@ -15,9 +15,13 @@ bash <(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/FunnySha
 
 ## 脚本功能
 [x] 利用 MD5 匹配扫描是否感染
+
 [x] 利用文件大小扫描是否感染
+
 [x] 自动清除感染文件
+
 [x] 自动修复面板
+
 [x] 自动修复 Nginx
 
 ## 漏洞相关分析
