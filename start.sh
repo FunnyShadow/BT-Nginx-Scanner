@@ -6,6 +6,9 @@
 ## Files
 bt="$1"
 nginx="${bt:=/www}/server/nginx/sbin/nginx"
+nginxMD5="$(cat ${bt}/server/panel/data/nginx_md5.pl)"
+nginxFileMD5="$(md5sum ${nginx} | awk '{print $1}')"
+oldNginx="${bt:=/www}/server/nginx/sbin/nginxBak"
 virusFiles=(
     /var/tmp/count
     /var/tmp/count.txt
@@ -26,6 +29,7 @@ fi
 ## Other
 check=0
 infection=0
+nginxInfection=0
 clean=""
 
 ### Tools ###
@@ -89,8 +93,10 @@ CheckNginx() {
     if [ ! -f "${nginx}" ]; then
         LEcho green "[√] 未找到Nginx, 您无需使用此脚本!" "[√] Nginx not found, you don't need to use this script!"
     fi
-    if [ "$(ls -l ${nginx} | awk '{print $5}')" == "4730568" ]; then
-        infection=1
+    if [ "${nginxMD5}" != "" ] && [ "${nginxFileMD5}" != "" ]; then
+        [ "${nginxMD5}" != "${nginxFileMD5}" ] && nginxInfection=1
+    else
+        [ "$(ls -l ${nginx} | awk '{print $5}')" == "4730568" ] && nginxInfection=1
     fi
     return
 }
@@ -112,8 +118,8 @@ CheckVirusFiles() {
 
 CheckInfection() {
     if [ "${infection}" == 1 ]; then
-        LEcho yellow "[!] 检测到系统已经被感染, 是否尝试清楚感染文件? (y/n)" "[!] The system has been infected, do you want to try to clean the infected files? (y/n)"
-        LEcho yellow "[!] 请注意, 清理操作并非一定有效, 仅为缓解作用, 并且会关闭宝塔面板以及 Nginx 服务!" "[!] Please note that the cleaning operation is not necessarily effective, only for the purpose of alleviation, and will shut down the BT panel and Nginx service!"
+        LEcho yellow "[!] 检测到系统已经被感染, 是否尝试修复? (y/n)" "[!] System has been infected, do you want to try to fix it? (y/n)"
+        LEcho yellow "[!] 请注意, 修复操作并非一定有效, 仅为缓解作用, 且不一定会成功!" "[!] Please note that the repair operation is not necessarily effective, only for temporary relief, and may not be successful!"
         read -rp 请输入选项: clean
         if [ "${clean}" == "y" ]; then
             Clean
@@ -130,16 +136,28 @@ Clean() {
     if [ "${infection}" == 1 ]; then
         LEcho echo "[-] 正在关闭宝塔面板服务..." "[-] Shutting down BT panel service..."
         /etc/init.d/bt stop
+        LEcho echo "[-] 正在清理感染文件..." "[-] Cleaning infected files..."
+        rm -rf "${virusFiles[@]}"
+        LEcho echo "[-] 正在尝试修复面板文件..." "[-] Trying to repair panel files..."
+        /etc/init.d/bt 16
+    fi
+    if [ "${nginxInfection}" == 1 ]; then
         LEcho echo "[-] 正在关闭 Nginx 服务..." "[-] Shutting down Nginx service..."
         /etc/init.d/nginx stop
         if [ "$(pgrep nginx)" != "" ]; then
             LEcho echo "[-] Nginx 进程未关闭, 正在强制关闭..." "[-] Nginx process not closed, forcing closure..."
             killall -9 nginx
         fi
-        LEcho echo "[-] 正在清理感染文件..." "[-] Cleaning infected files..."
-        rm -rf "${virusFiles[@]}"
-        LEcho green "[√] 清理完成!" "[√] Cleaned!"
+        if [ -f "${oldNginx}" ]; then
+            LEcho echo "[-] 正在清理 Nginx 文件..." "[-] Cleaning Nginx files..."
+            rm -rf "${nginx}"
+            LEcho echo "[-] 正在尝试修复 Nginx 文件..." "[-] Trying to repair Nginx files..."
+            mv -f "${oldNginx}" "${nginx}"
+        else
+            LEcho yellow "[!] 由于不存在旧版 Nginx 文件, 无法修复 Nginx 文件, 请手动修复!" "[!] Because there is no old version of Nginx file, Nginx file cannot be repaired, please repair manually!"
+        fi
     fi
+    LEcho green "[√] 尝试修复成功" "[√] Try to repair successfully"
     return
 }
 
