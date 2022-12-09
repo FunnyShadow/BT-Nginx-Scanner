@@ -19,12 +19,16 @@ curl -sS https://raw.githubusercontent.com/FunnyShadow/BT-Nginx-Scanner/main/sta
 
 #### 漏洞效果
 1.可直接获取系统最高权限
+
 2.可执行任意命令
+
 3.可直接修改Nginx配置文件
+
 4.可直接修改数据库
 
 #### 特征
 1./www/server/nginx/sbin/nginx 文件大小变为 4.51MB（其他均不算）
+
 2.存在以下任一文件（可能全部存在）
 
 - /var/tmp/count
@@ -42,12 +46,16 @@ curl -sS https://raw.githubusercontent.com/FunnyShadow/BT-Nginx-Scanner/main/sta
 - /www/server/nginx/sbin/nginxBak （网传是宝塔安装时自动生成的回退版本, 不确定性质, 研究时未发现有病毒代码）
 
 3.网站被挂马，自动跳转到h站等地方
+
 4.（可能）服务器被种挖矿木马
+
 5.此木马是随机性木马, 随机触发
 
 #### 建议
 1.使用非默认端口号
+
 2.暂时关闭面板 (直接防火墙封堵端口或暂停面板服务)
+
 3.暂时关闭Nginx
 
 ## 协议
