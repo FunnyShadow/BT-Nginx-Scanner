@@ -26,6 +26,7 @@ fi
 ## Other
 check=0
 infection=0
+clean=""
 
 ### Tools ###
 ## Localize echo
@@ -109,14 +110,18 @@ CheckVirusFiles() {
     return
 }
 
-Infection() {
-    LEcho yellow "[!] 检测到系统已经被感染, 是否尝试清楚感染文件? (y/n)" "[!] The system has been infected, do you want to try to clean the infected files? (y/n)"
-    LEcho yellow "[!] 请注意, 清理操作并非一定有效, 仅为缓解作用, 并且会关闭宝塔面板以及 Nginx 服务!" "[!] Please note that the cleaning operation is not necessarily effective, only for the purpose of alleviation, and will shut down the BT panel and Nginx service!"
-    read -rp 请输入选项: clean
-    if [ "${clean}" == "y" ]; then
-        Clean
+CheckInfection() {
+    if [ "${infection}" == 1 ]; then
+        LEcho yellow "[!] 检测到系统已经被感染, 是否尝试清楚感染文件? (y/n)" "[!] The system has been infected, do you want to try to clean the infected files? (y/n)"
+        LEcho yellow "[!] 请注意, 清理操作并非一定有效, 仅为缓解作用, 并且会关闭宝塔面板以及 Nginx 服务!" "[!] Please note that the cleaning operation is not necessarily effective, only for the purpose of alleviation, and will shut down the BT panel and Nginx service!"
+        read -rp 请输入选项: clean
+        if [ "${clean}" == "y" ]; then
+            Clean
+        else
+            LEcho red "[-] 已经扫描完毕, 已感染" "[-] Scan complete, infected"
+        fi
     else
-        LEcho red "[-] 已经扫描完毕, 已感染" "[-] Scan complete, infected"
+        LEcho green "[√] 已扫描完毕, 未感染!" "[√] Scan complete, not infected!"
     fi
     return
 }
@@ -143,9 +148,5 @@ Copyright
 CheckBT
 CheckNginx
 CheckVirusFiles
-if [ "${infection}" == 1 ]; then
-    Infection
-else
-    LEcho green "[√] 已扫描完毕, 未感染!" "[√] Scan complete, not infected!"
-fi
+CheckInfection
 exit 0
